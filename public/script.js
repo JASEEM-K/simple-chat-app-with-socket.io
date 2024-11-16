@@ -12,12 +12,35 @@ form.addEventListener('submit', (e) => {
     }
 })
 
-socket.on('online', (count) => {
+// need more optimization
+/*
+let timeout
+input.addEventListener('input', (e) => {
+    socket.emit('whos-typing')
+    clearTimeout(timeout)
+
+    timeout = setTimeout(() => {
+        socket.emit('whos-typing','lksjdfl')
+    },1000)
+})
+
+socket.on('whos-typing', (data) => {
+    if(data.typing){
+        document.getElementById('online-typing').style.display = 'block'
+        document.getElementById('online-typing').textContent = user
+    }else{
+        document.getElementById('online-typing').style.display = 'none'
+    }
+})
+*/
+
+socket.on('whos-online', (names) => {
+    const count = names.length  
     document.getElementById('online-count').textContent = count
 })
 
 socket.on('chat message', (user, msg) => {
-    socket.emit('online')
+    socket.emit('whos-online')
     displayMessage(user, msg)
 })
 
@@ -58,10 +81,10 @@ const init = () => {
         e.preventDefault()
         const foo = authCkeck()
         if (foo) {
+            navbar.style.display = 'block'
+            form.style.display = 'block'
+            ul.style.display = 'block'
             login.style.display = 'none'
-            navbar.style.display = ''
-            form.style.display = ''
-            ul.style.display = ''
         }
     })
 }
