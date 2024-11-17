@@ -35,14 +35,17 @@ io.on('connection', (socket) => {
 
   socket.on('whos-online', async() => {
     const users = await io.in(socket.room).fetchSockets()
-    const names = users.map(user => user.name)
+    const names = users.map(user => user.name && user.id)
     io.in(socket.room).emit('whos-online', names)
   })
 
-  socket.emit('chat message', socket.name + ' connected')
+  socket.in(socket.room).emit('chat message', socket.name + ' connected')
   socket.on('chat message', (msg) => {
     io.in(socket.room).emit('chat message', socket.name ,msg)
   })
+
+  socket.on('private-message', (user,msg) => {
+    io.to(user).emit('private-message', {user:socket.name, msg: msg, type:'private'}) })
  
   socket.on('disconnect', () => {
     console.log(socket.name,' user diconnected');

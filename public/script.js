@@ -31,6 +31,7 @@ socket.on('whos-typing', (data) => {
     if(data.typing){
         document.getElementById('online-typing-status').style.display = 'block'
         document.getElementById('online-typing').textContent = data.name
+        console.log(data)
     }else{
         document.getElementById('online-typing-status').style.display = 'none'
     }
@@ -41,18 +42,26 @@ socket.on('whos-online', (names) => {
     document.getElementById('online-count').textContent = count
 })
 
+socket.on('private-message', (data) => {
+    displayMessage(data.user,data.msg,data.type)
+})
+
 socket.on('chat message', (user, msg) => {
     socket.emit('whos-online')
     displayMessage(user, msg)
 })
 
-const displayMessage = (user,msg) => {
+const displayMessage = (user,msg,type='') => {
     var item = document.createElement('li')
     const namespan = document.createElement('span')
     const textspan = document.createElement('span')
     namespan.textContent = user
     textspan.textContent = msg
     namespan.id = 'username-style'
+    if(type === 'private'){
+        namespan.style.backgroundColor = '#efefef'
+        textspan.style.backgroundColor = '#efefef'
+    }
     item.appendChild(namespan)
     item.appendChild(textspan)
     ul.appendChild(item)
