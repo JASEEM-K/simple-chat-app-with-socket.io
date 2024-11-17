@@ -16,9 +16,11 @@ io.on('connection', (socket) => {
 
   socket.on('name-auth', (name,room) => {
     socket.name = name
-    io.socketsLeave(socket.id)
 
     io.emit('chat message', socket.name , ' connected')
+    if(socket.room){
+      socket.leave(socket.room)
+    }
     socket.join(room)
     socket.room = room
   })
@@ -39,7 +41,7 @@ io.on('connection', (socket) => {
 
   socket.emit('chat message', socket.name + ' connected')
   socket.on('chat message', (msg) => {
-    io.emit('chat message', socket.name ,msg)
+    io.in(socket.room).emit('chat message', socket.name ,msg)
   })
  
   socket.on('disconnect', () => {
