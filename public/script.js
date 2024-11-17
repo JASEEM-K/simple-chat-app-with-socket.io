@@ -13,26 +13,28 @@ form.addEventListener('submit', (e) => {
 })
 
 // need more optimization
-/*
 let timeout
+let isTyping = false 
 input.addEventListener('input', (e) => {
-    socket.emit('whos-typing')
+    if(!isTyping){
+        socket.emit('whos-typing')
+        isTyping = true
+    }
     clearTimeout(timeout)
-
     timeout = setTimeout(() => {
-        socket.emit('whos-typing','lksjdfl')
+        socket.emit('stop-typing')
+        isTyping = false
     },1000)
 })
 
 socket.on('whos-typing', (data) => {
     if(data.typing){
-        document.getElementById('online-typing').style.display = 'block'
-        document.getElementById('online-typing').textContent = user
+        document.getElementById('online-typing-status').style.display = 'block'
+        document.getElementById('online-typing').textContent = data.name
     }else{
-        document.getElementById('online-typing').style.display = 'none'
+        document.getElementById('online-typing-status').style.display = 'none'
     }
 })
-*/
 
 socket.on('whos-online', (names) => {
     const count = names.length  
