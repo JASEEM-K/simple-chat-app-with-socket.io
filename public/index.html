@@ -25,6 +25,10 @@
   </ul>
   <form id="form" action="">
     <input id="private-input" placeholder="Username" autocomplete="off" />
+    <button onclick="
+    document.getElementById('private-input').textContent= '';"
+    >Clear Private</button>
+    <span id="user-id-private" style="display: none;"></span>
     <input id="input" placeholder="Message" autocomplete="off" /><button>Send</button>
   </form>
   <script src="/socket.io/socket.io.js"></script>

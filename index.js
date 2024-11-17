@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
   socket.on('name-auth', (name,room) => {
     socket.name = name
 
-    io.emit('chat message', socket.name , ' connected')
+    io.emit('chat message', socket.name,socket.id , ' connected')
     if(socket.room){
       socket.leave(socket.room)
     }
@@ -39,17 +39,16 @@ io.on('connection', (socket) => {
     io.in(socket.room).emit('whos-online', names)
   })
 
-  socket.in(socket.room).emit('chat message', socket.name + ' connected')
+  socket.in(socket.room).emit('chat message', socket.name,socket.id,  ' connected')
   socket.on('chat message', (msg) => {
-    io.in(socket.room).emit('chat message', socket.name ,msg)
+    io.in(socket.room).emit('chat message', socket.name,socket.id ,msg)
   })
 
   socket.on('private-message', (user,msg) => {
-    io.to(user).emit('private-message', {user:socket.name, msg: msg, type:'private'}) })
+    io.to(user).emit('private-message', {user:socket.name,id:socket.id, msg: msg}) })
  
   socket.on('disconnect', () => {
-    console.log(socket.name,' user diconnected');
-    socket.broadcast.emit('chat message', socket.name ,'disconnected');
+    socket.broadcast.emit('chat message', socket.name, socket.id ,'disconnected');
   })
 });
 

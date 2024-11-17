@@ -6,7 +6,11 @@ var ul = document.getElementById('messages');
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (input.value){
+    const toUser = document.getElementById('user-id-private').textContent
+    if(toUser){
+        socket.emit('private-message', toUser, input.value)
+    }
+    if (!toUser && input.value){
         socket.emit('chat message', input.value);
         input.value = '';
     }
@@ -30,8 +34,8 @@ input.addEventListener('input', (e) => {
 socket.on('whos-typing', (data) => {
     if(data.typing){
         document.getElementById('online-typing-status').style.display = 'block'
-        document.getElementById('online-typing').textContent = data.name
-        console.log(data)
+        const name =  data.name
+        document.getElementById('online-typing').textContent = name
     }else{
         document.getElementById('online-typing-status').style.display = 'none'
     }
@@ -43,15 +47,15 @@ socket.on('whos-online', (names) => {
 })
 
 socket.on('private-message', (data) => {
-    displayMessage(data.user,data.msg,data.type)
+    displayMessage({user:data.name,id:data.id,msg:data.msg,type:'private'})
 })
 
-socket.on('chat message', (user, msg) => {
+socket.on('chat message', (user,id, msg) => {
     socket.emit('whos-online')
-    displayMessage(user, msg)
+    displayMessage({user , id ,msg})
 })
 
-const displayMessage = (user,msg,type='') => {
+const displayMessage = ({user,id,msg,type=''}) => {
     var item = document.createElement('li')
     const namespan = document.createElement('span')
     const textspan = document.createElement('span')
@@ -62,6 +66,11 @@ const displayMessage = (user,msg,type='') => {
         namespan.style.backgroundColor = '#efefef'
         textspan.style.backgroundColor = '#efefef'
     }
+    item.addEventListener('dblclick', (e) => {
+        e.preventDefault()
+        document.getElementById('private-input').value = namespan.textContent
+        document.getElementById('user-id-private').textContent = id 
+    })
     item.appendChild(namespan)
     item.appendChild(textspan)
     ul.appendChild(item)
