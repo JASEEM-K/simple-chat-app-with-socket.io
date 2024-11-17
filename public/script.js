@@ -47,7 +47,7 @@ socket.on('whos-online', (names) => {
 })
 
 socket.on('private-message', (data) => {
-    displayMessage({user:data.name,id:data.id,msg:data.msg,type:'private'})
+    displayMessage({user:data.user,id:data.id,msg:data.msg,type:'private'})
 })
 
 socket.on('chat message', (user,id, msg) => {
@@ -55,16 +55,17 @@ socket.on('chat message', (user,id, msg) => {
     displayMessage({user , id ,msg})
 })
 
-const displayMessage = ({user,id,msg,type=''}) => {
-    var item = document.createElement('li')
+const displayMessage = ({user,id,msg,type}) => {
+    const item = document.createElement('li')
     const namespan = document.createElement('span')
     const textspan = document.createElement('span')
-    namespan.textContent = user
+    namespan.textContent = user + " : "
     textspan.textContent = msg
     namespan.id = 'username-style'
     if(type === 'private'){
-        namespan.style.backgroundColor = '#efefef'
-        textspan.style.backgroundColor = '#efefef'
+        textspan.style.color = 'red'
+        namespan.style.color = '#d500a3fb'
+        namespan.textContent = '(Private) ' + namespan.textContent
     }
     item.addEventListener('dblclick', (e) => {
         e.preventDefault()
@@ -107,4 +108,8 @@ const init = () => {
             login.style.display = 'none'
         }
     })
+}
+function clearPrivate() {
+    document.getElementById('private-input').value = ''
+    document.getElementById('user-id-private').textContent = ''
 }

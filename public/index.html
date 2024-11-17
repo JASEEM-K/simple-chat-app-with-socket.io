@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 
-<body onload="init()">
+<body onload="init()" >
   <div id="login-form">
     <form id="login" action="">
       <input id="name_input" placeholder="Username" autocomplete="off" />
@@ -25,8 +25,7 @@
   </ul>
   <form id="form" action="">
     <input id="private-input" placeholder="Username" autocomplete="off" />
-    <button onclick="
-    document.getElementById('private-input').textContent= '';"
+    <button type="button" onclick="clearPrivate()"
     >Clear Private</button>
     <span id="user-id-private" style="display: none;"></span>
     <input id="input" placeholder="Message" autocomplete="off" /><button>Send</button>
