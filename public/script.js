@@ -65,9 +65,13 @@ const displayMessage = ({user,id,msg,type}) => {
     textspan.textContent = msg
     namespan.id = 'username-style'
     if(type === 'private'){
+        const private = document.createElement('span')
+        private.textContent = '(Private) '
+        private.style.color = '#d500a3fb'
         textspan.style.color = 'red'
         namespan.style.color = '#d500a3fb'
-        namespan.textContent = '(Private) ' + namespan.textContent
+        namespan.textContent = namespan.textContent
+        item.appendChild(private)
     }
     item.addEventListener('dblclick', (e) => {
         e.preventDefault()
