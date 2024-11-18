@@ -39,9 +39,9 @@ io.on('connection', (socket) => {
     io.in(socket.room).emit('whos-online', names)
   })
 
-  socket.in(socket.room).emit('chat message', socket.name,socket.id,  ' connected')
+  socket.to(socket.room).emit('chat message', socket.name,socket.id,  ' connected')
   socket.on('chat message', (msg) => {
-    io.in(socket.room).emit('chat message', socket.name,socket.id ,msg)
+    io.to(socket.room).emit('chat message', socket.name,socket.id ,msg)
   })
 
   socket.on('private-message', (user,msg) => {

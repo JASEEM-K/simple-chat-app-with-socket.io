@@ -9,9 +9,11 @@ form.addEventListener('submit', (e) => {
     const toUser = document.getElementById('user-id-private').textContent
     if(toUser){
         socket.emit('private-message', toUser, input.value)
+        displayMessage({user:'You',id:'',msg:input.value,type:'private'})
     }
     if (!toUser && input.value){
         socket.emit('chat message', input.value);
+        displayMessage({user:'You',id:'',msg:input.value})
         input.value = '';
     }
 })
@@ -47,12 +49,12 @@ socket.on('whos-online', (names) => {
 })
 
 socket.on('private-message', (data) => {
-    displayMessage({user:data.user,id:data.id,msg:data.msg,type:'private'})
+    data.id !== socket.id && displayMessage({user:data.user,id:data.id,msg:data.msg,type:'private'})
 })
 
 socket.on('chat message', (user,id, msg) => {
     socket.emit('whos-online')
-    displayMessage({user , id ,msg})
+    id !== socket.id && displayMessage({user , id ,msg})
 })
 
 const displayMessage = ({user,id,msg,type}) => {
@@ -86,6 +88,7 @@ const authCkeck = () => {
         return false
     }else{
         socket.emit('name-auth', name,room);
+        displayMessage({user:'You',id:'',msg:' connected'})
         return true
     }
 }
